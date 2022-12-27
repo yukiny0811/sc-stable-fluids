@@ -11,6 +11,7 @@
 		56A0FEB9295AC0DB00216643 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56A0FEB8295AC0DB00216643 /* ContentView.swift */; };
 		56A0FEBB295AC0DC00216643 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 56A0FEBA295AC0DC00216643 /* Assets.xcassets */; };
 		56A0FEBE295AC0DC00216643 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 56A0FEBD295AC0DC00216643 /* Preview Assets.xcassets */; };
+		56A0FECC295ADFBF00216643 /* SwiftyCreatives in Frameworks */ = {isa = PBXBuildFile; productRef = 56A0FECB295ADFBF00216643 /* SwiftyCreatives */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -27,6 +28,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				56A0FECC295ADFBF00216643 /* SwiftyCreatives in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -38,6 +40,7 @@
 			children = (
 				56A0FEB5295AC0DB00216643 /* FluidSimSwift */,
 				56A0FEB4295AC0DB00216643 /* Products */,
+				56A0FEC7295AC0F500216643 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -69,6 +72,13 @@
 			path = "Preview Content";
 			sourceTree = "<group>";
 		};
+		56A0FEC7295AC0F500216643 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -85,6 +95,9 @@
 			dependencies = (
 			);
 			name = FluidSimSwift;
+			packageProductDependencies = (
+				56A0FECB295ADFBF00216643 /* SwiftyCreatives */,
+			);
 			productName = FluidSimSwift;
 			productReference = 56A0FEB3295AC0DB00216643 /* FluidSimSwift.app */;
 			productType = "com.apple.product-type.application";
@@ -113,6 +126,9 @@
 				Base,
 			);
 			mainGroup = 56A0FEAA295AC0DB00216643;
+			packageReferences = (
+				56A0FECA295ADFBF00216643 /* XCRemoteSwiftPackageReference "swifty-creatives" */,
+			);
 			productRefGroup = 56A0FEB4295AC0DB00216643 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -336,6 +352,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		56A0FECA295ADFBF00216643 /* XCRemoteSwiftPackageReference "swifty-creatives" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/yukiny0811/swifty-creatives";
+			requirement = {
+				kind = exactVersion;
+				version = 1.6.2;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		56A0FECB295ADFBF00216643 /* SwiftyCreatives */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 56A0FECA295ADFBF00216643 /* XCRemoteSwiftPackageReference "swifty-creatives" */;
+			productName = SwiftyCreatives;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 56A0FEAB295AC0DB00216643 /* Project object */;
 }
