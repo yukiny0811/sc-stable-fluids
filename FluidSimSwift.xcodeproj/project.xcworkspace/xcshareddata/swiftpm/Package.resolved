@@ -5,8 +5,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/yukiny0811/swifty-creatives",
       "state" : {
-        "revision" : "5bf8d7a1f0fc10ec9905811dd0a75e2e9244054c",
-        "version" : "1.6.2"
+        "revision" : "105eeee21a7d5e09f343b945e2e3a9e02ba9d9a3",
+        "version" : "1.6.3"
       }
     }
   ],

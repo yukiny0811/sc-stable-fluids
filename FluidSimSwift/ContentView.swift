@@ -9,12 +9,33 @@ import SwiftUI
 import SwiftyCreatives
 
 struct ContentView: View {
+    @State var dt: Float = 0.01
+    @State var diffusion: Float = 0.001
+    let sketch = FluidSketch()
     var body: some View {
-        VStack {
-            SketchView<FluidSketch, MyCameraConfig, MainDrawConfig>()
+        HStack {
+            SketchView<MyCameraConfig, MainDrawConfig>(sketch)
+                .frame(width: 500, height: 500)
+            VStack {
+                Group {
+                    Text("dt: \(dt)")
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                    Slider(value: $dt, in: 0.000001...0.1) { _ in
+                        sketch.dt = dt
+                    }
+                }
+                Group {
+                    Text("diffusion: \(diffusion)")
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                    Slider(value: $diffusion, in: 0.000001...0.1) { _ in
+                        sketch.diffusion = diffusion
+                    }
+                }
+            }
+            .padding(30)
+            .frame(width: 300, height: 500)
         }
-        .background(.gray)
-        .frame(width: 500, height: 500)
+        .background(Color(nsColor: NSColor(red: 0.1, green: 0.1, blue: 0.1, alpha: 1)))
     }
 }
 
@@ -28,36 +49,14 @@ final class MyCameraConfig: CameraConfigBase {
 
 final class FluidSketch: SketchBase {
     
-    var velocity: [f2] = []
-    var prevVelocity: [f2] = []
-    
-    var density: [Float] = []
-    var prevDensity: [Float] = []
-    
-    var rectArray: [Rect] = []
-    
-    static let COUNT = 30
-    static let COUNTp1 = COUNT + 1
-    static let COUNTp2 = COUNT + 2
-    
-    let dt: Float = 0.01
-    let diffusion: Float = 0.001
-    let cellSize: Float = 10
-    let num: Int = (COUNTp2)*(COUNTp2)
-    let inputSize: Float = 5.0
-    
-    var saveMouse = f2(0, 0)
-    
-    var isDragging: Bool = false
-    
-    func setup(camera: some SwiftyCreatives.MainCameraBase) {
+    init() {
         for i in 0..<num {
             velocity.append(f2(0, 0))
             prevVelocity.append(f2(0, 0))
             density.append(0)
             prevDensity.append(0)
             
-            let rect = Rect()
+            let rect = Box()
             let x: Float = Float(i % FluidSketch.COUNTp2) - Float(FluidSketch.COUNTp2/2)
             let y: Float = Float(Int(i / FluidSketch.COUNTp2)) - Float(FluidSketch.COUNTp2/2)
             rect.setPos(f3(x, y, 0))
@@ -65,7 +64,32 @@ final class FluidSketch: SketchBase {
             rect.setScale(f3.one * 0.5)
             rectArray.append(rect)
         }
-        camera.setTranslate(0, 0, -20)
+    }
+    
+    var velocity: [f2] = []
+    var prevVelocity: [f2] = []
+    
+    var density: [Float] = []
+    var prevDensity: [Float] = []
+    
+    var rectArray: [Box] = []
+    
+    static let COUNT = 30
+    static let COUNTp1 = COUNT + 1
+    static let COUNTp2 = COUNT + 2
+    
+    var dt: Float = 0.01
+    var diffusion: Float = 0.001
+    let num: Int = (COUNTp2)*(COUNTp2)
+    let inputSize: Float = 5.0
+    
+    var saveMouse = f2(0, 0)
+    
+    var isDragging: Bool = false
+    
+    func setupCamera(camera: some SwiftyCreatives.MainCameraBase) {
+        camera.setTranslate(0, 0, -30)
+        camera.setRotation(-0.8, 0.0, 0)
     }
     
     func update(camera: some SwiftyCreatives.MainCameraBase) {
@@ -74,6 +98,7 @@ final class FluidSketch: SketchBase {
         for r in 0..<rectArray.count {
 //            rectArray[r].setColor(f4(density[r], abs(velocity[r].x), abs(velocity[r].y), 1))
             rectArray[r].setColor(f4(density[r], density[r], density[r], 1))
+            rectArray[r].setPos(f3(rectArray[r].pos.x, rectArray[r].pos.y, abs(velocity[r].x) - abs(velocity[r].y)))
         }
     }
     
@@ -90,7 +115,10 @@ final class FluidSketch: SketchBase {
     }
     
     func mouseDragged(with event: NSEvent, camera: some MainCameraBase, viewFrame: CGRect) {
-        let rawLocation = event.locationInWindow
+        let rawLocation = CGPoint(
+            x: event.locationInWindow.x - viewFrame.origin.x,
+            y: event.locationInWindow.y - viewFrame.origin.y
+        )
         let location: f2 = f2(Float(rawLocation.x), Float(rawLocation.y))
         
         let diff = location - saveMouse
@@ -108,8 +136,15 @@ final class FluidSketch: SketchBase {
         
         let size = 1
         
+        if processedX < 0 || processedX > FluidSketch.COUNTp2 || processedY < 0 || processedY > FluidSketch.COUNTp2 {
+            return
+        }
+        
         for x in processedX-size...processedX+size {
             for y in processedY-size...processedY+size {
+                if x < 0 || x > FluidSketch.COUNTp2 || y < 0 || y > FluidSketch.COUNTp2 {
+                    continue
+                }
                 let index = getPos(x, y)
                 prevDensity[index] = 100
             }
